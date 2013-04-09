@@ -105,6 +105,9 @@ class ObjectListToJsonListTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
+
+        $value = json_decode($value);
+
         if (!$value) {
             return null;
         } else {
@@ -114,6 +117,9 @@ class ObjectListToJsonListTransformer implements DataTransformerInterface
             foreach($value as $item) {
                 $ids[] = $item->getId();
             }
+
+            // TODO: this should be moved to a repository method
+            // then it would really be testable ;)
             $qb = $this->om->createQueryBuilder();
 
             $qb->select('o')
