@@ -1,6 +1,7 @@
 <?php
 namespace Btanase\MultiSelectAutocompleteBundle\Form\DataTransformer;
 
+use Btanase\MultiSelectAutocompleteBundle\Persistence\Manager\ItemManagerInterface;
 use Doctrine\ORM\EntityManager;
 
 use Symfony\Component\Form\DataTransformerInterface;
@@ -10,23 +11,15 @@ use Symfony\Component\Form\DataTransformerInterface;
  */
 class ObjectListToJsonListTransformer implements DataTransformerInterface
 {
-    /**
-     * @var EntityManager
-     */
-    private $om;
 
     private $labelProperty;
 
-    /**
-     * @var string
-     */
-    private $entityName;
+    private $manager;
 
-    function __construct($om, $entityName, $labelProperty)
+    function __construct(ItemManagerInterface $manager, $labelProperty)
     {
         $this->labelProperty = $labelProperty;
-        $this->entityName = $entityName;
-        $this->om = $om;
+        $this->manager = $manager;
     }
 
     /**
@@ -115,18 +108,10 @@ class ObjectListToJsonListTransformer implements DataTransformerInterface
             $ids = array();
 
             foreach($value as $item) {
-                $ids[] = $item->getId();
+                $ids[] = $item->value;
             }
 
-            // TODO: this should be moved to a repository method
-            // then it would really be testable ;)
-            $qb = $this->om->createQueryBuilder();
-
-            $qb->select('o')
-                ->from($this->entityName, 'o')
-                ->where($qb->expr()->in('o.id', $ids));
-
-            return $qb->getQuery()->getResult();
+            return $this->manager->getListByIds($ids);
         }
     }
 

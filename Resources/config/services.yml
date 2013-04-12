@@ -2,6 +2,11 @@ parameters:
 #    btanase_multi_select_autocomplete.example.class: Btanase\MultiSelectAutocompleteBundle\Example
 
 services:
+    btanase_autocomplete:
+        class: Btanase\MultiSelectAutocompleteBundle\Form\Type\BTAutocompleteType
+        tags:
+            - { name: form.type, alias: bt_autocomplete }
 #    btanase_multi_select_autocomplete.example:
 #        class: %btanase_multi_select_autocomplete.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+
