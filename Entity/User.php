@@ -10,7 +10,7 @@ use Btanase\MultiSelectAutocompleteBundle\Entity\UserGroup;
  * User
  *
  * @ORM\Table(name="user")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Btanase\MultiSelectAutocompleteBundle\Entity\UserRepository")
  */
 class User
 {

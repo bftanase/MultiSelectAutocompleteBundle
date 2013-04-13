@@ -173,7 +173,12 @@
 
                 // this will build the tags from a JSON array stored in the input value field
                 node = $(this.options.singleFieldNode);
-                var items = JSON.parse(node.val());
+
+                var items = [];
+                if (node.val() != '') {
+                    items = JSON.parse(node.val());
+                }
+
                 $.each(items, function(index, item) {
                     that.createTag(item, null, true);
                     addedExistingFromSingleFieldNode = true;
@@ -309,14 +314,11 @@
         },
 
         _updateSingleTagsField: function(tags) {
-            if (this.options.singleFieldNodeJsonData) {
-                var jsonString = JSON.stringify(tags);
-                console.log("tags.toString() = " + jsonString);
-                $(this.options.singleFieldNode).val(jsonString);
-            } else {
-                // Takes a list of tag string values, updates this.options.singleFieldNode.val to the tags delimited by this.options.singleFieldDelimiter
-                $(this.options.singleFieldNode).val(tags.join(this.options.singleFieldDelimiter)).trigger('change');
-            }
+
+            var jsonString = JSON.stringify(tags);
+            console.log("tags.toString() = " + jsonString);
+            $(this.options.singleFieldNode).val(jsonString);
+
         },
 
         _subtractArray: function(a1, a2) {

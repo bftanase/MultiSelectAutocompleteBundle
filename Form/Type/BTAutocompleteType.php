@@ -14,6 +14,9 @@ use Btanase\MultiSelectAutocompleteBundle\Persistence\Manager\ItemManagerInterfa
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
+
 
 class BTAutocompleteType extends AbstractType {
 
@@ -53,8 +56,14 @@ class BTAutocompleteType extends AbstractType {
     {
         $resolver->setDefaults(array(
             'item_manager' => null,
-            'property_label' => null
+            'property_label' => null,
+            'ajax_autocomplete_route_name' => null
         ));
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['ajax_autocomplete_route_name'] = $options['ajax_autocomplete_route_name'];
     }
 
 

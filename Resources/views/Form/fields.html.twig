@@ -1,3 +1,36 @@
 {% block bt_autocomplete_widget %}
-bla bla bla
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        <input type="hidden"
+                {{ block('widget_attributes') }} {% if value is not empty %}value='{{ value | raw() }}' {% endif %}/>
+        <ul style="width: 450px; float:right;" id="{{ id }}_tagit"></ul>
+    {% endspaceless %}
+
+
+    {% block bt_autocomplete_js %}
+        <script type="text/javascript">
+            $(function() {
+                var cache = [];
+                var elementId = '#{{ id }}_tagit';
+                var inputId = '#{{ id }}';
+                $(elementId).tagit({
+                    singleFieldNode: $(inputId),
+                    autocomplete: {
+                        source: function(request, response) {
+                            var term = request.term;
+                            if (term in cache) {
+                                response(cache[term]);
+                                return;
+                            }
+
+                            $.getJSON('{{ path(ajax_autocomplete_route_name) }}', request, function (data, status ,xhr) {
+                                cache[term] = data;
+                                response(data);
+                            });
+                        }
+                    }
+                })
+            })
+        </script>
+    {% endblock %}
 {% endblock %}

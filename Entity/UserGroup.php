@@ -31,7 +31,7 @@ class UserGroup
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="group")
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="groups")
      * @ORM\JoinTable(name="user_group",
      *  joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *  inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
