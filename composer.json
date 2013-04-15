@@ -1,0 +1,25 @@
+{
+    "name": "btanase/multiselect-autocomplete-bundle",
+    "type": "symfony-bundle",
+    "description": "javascript widget & form type for many-to-x selections",
+    "keywords": ["autocomplete", "widget", "multi-select"],
+    "homepage": "https://github.com/bftanase/MultiSelectAutocompleteBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bogdan Tanase",
+            "email": "bftanase@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": ">=2.1,<2.3-dev",
+        "symfony/form": ">=2.1,<2.3-dev"
+    },
+    "autoload": {
+        "psr-0": { "Btanase\\MultiSelectAutocompleteBundle": "" }
+    },
+    "target-dir": "Btanase/MultiSelectAutocompleteBundle"
+
+}
