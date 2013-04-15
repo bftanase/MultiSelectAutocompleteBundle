@@ -3,7 +3,7 @@
         {% set type = type|default('text') %}
         <input type="hidden"
                 {{ block('widget_attributes') }} {% if value is not empty %}value='{{ value | raw() }}' {% endif %}/>
-        <ul style="width: 450px; float:right;" id="{{ id }}_tagit"></ul>
+        <ul id="{{ id }}_tagit"></ul>
     {% endspaceless %}
 
 
