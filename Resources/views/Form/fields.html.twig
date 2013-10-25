@@ -15,6 +15,7 @@
                 var inputId = '#{{ id }}';
                 $(elementId).tagit({
                     singleFieldNode: $(inputId),
+                    tagLimit: {% if multiple %}null{% else %}1{% endif %},
                     autocomplete: {
                         source: function(request, response) {
                             var term = request.term;

@@ -1,9 +1,4 @@
 <?php
-/**
- * User: bogdan
- * 
- */
-
 namespace Btanase\MultiSelectAutocompleteBundle\Persistence\Manager;
 
 
@@ -15,4 +10,11 @@ interface ItemManagerInterface {
      * @return array Object
      */
     public function getListByIds($ids);
+
+    /**
+     * The implementation should return an Entity Object based on the passed $id
+     * @param $id
+     * @return Object
+     */
+    public function getEntityById($id);
 }

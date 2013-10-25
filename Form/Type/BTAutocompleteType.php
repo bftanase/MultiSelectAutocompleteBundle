@@ -10,6 +10,7 @@
 namespace Btanase\MultiSelectAutocompleteBundle\Form\Type;
 
 use Btanase\MultiSelectAutocompleteBundle\Form\DataTransformer\ObjectListToJsonListTransformer;
+use Btanase\MultiSelectAutocompleteBundle\Form\DataTransformer\ObjectToJsonTransformer;
 use Btanase\MultiSelectAutocompleteBundle\Persistence\Manager\ItemManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,7 +48,11 @@ class BTAutocompleteType extends AbstractType {
         $itemManager = $options['item_manager'];
         $propertyLabel = $options['property_label'];
 
-        $builder->addModelTransformer(new ObjectListToJsonListTransformer($itemManager, $propertyLabel));
+        if ($options['multiple']) {
+            $builder->addModelTransformer(new ObjectListToJsonListTransformer($itemManager, $propertyLabel));
+        } else {
+            $builder->addModelTransformer(new ObjectToJsonTransformer($itemManager, $propertyLabel));
+        }
 
         parent::buildForm($builder, $options);
     }
@@ -57,13 +62,16 @@ class BTAutocompleteType extends AbstractType {
         $resolver->setDefaults(array(
             'item_manager' => null,
             'property_label' => null,
-            'ajax_autocomplete_route_name' => null
+            'ajax_autocomplete_route_name' => null,
+            'multiple' => true,
         ));
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['ajax_autocomplete_route_name'] = $options['ajax_autocomplete_route_name'];
+        $view->vars['multiple'] = $options['multiple'];
+
     }
 
 

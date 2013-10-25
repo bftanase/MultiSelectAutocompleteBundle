@@ -6,6 +6,7 @@
 
 namespace Btanase\MultiSelectAutocompleteBundle\Persistence\Manager;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ItemManagerDoctrineImpl extends ContainerAware implements ItemManagerInterface {
@@ -13,7 +14,7 @@ class ItemManagerDoctrineImpl extends ContainerAware implements ItemManagerInter
     private $entityName;
     private $em;
 
-    function __construct($entityName, $em)
+    function __construct($entityName, EntityManager $em)
     {
         $this->entityName = $entityName;
         $this->em = $em;
@@ -35,5 +36,15 @@ class ItemManagerDoctrineImpl extends ContainerAware implements ItemManagerInter
 
         return $qb->getQuery()->getResult();
 
+    }
+
+    /**
+     * The implementation should return an Entity Object based on the passed $id
+     * @param $id
+     * @return Object
+     */
+    public function getEntityById($id)
+    {
+        return $this->em->getRepository($this->entityName)->find($id);
     }
 }
