@@ -2,6 +2,7 @@
 namespace Btanase\MultiSelectAutocompleteBundle\Form\DataTransformer;
 
 use Btanase\MultiSelectAutocompleteBundle\Persistence\Manager\ItemManagerInterface;
+use Btanase\MultiSelectAutocompleteBundle\Util\PropertyParser;
 use Doctrine\ORM\EntityManager;
 
 use Symfony\Component\Form\DataTransformerInterface;
