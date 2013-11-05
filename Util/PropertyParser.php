@@ -6,11 +6,12 @@ namespace Btanase\MultiSelectAutocompleteBundle\Util;
 /**
  * @author Bogdan Tanase <bftanase@gmail.com>
  */
-class PropertyParser {
+class PropertyParser
+{
 
     private $propertyString;
 
-    private $propertyTree = array();
+    private $propertyTreeList = array();
 
     /**
      * property must be an expression in the format:
@@ -30,22 +31,39 @@ class PropertyParser {
         $this->propertyString = $propertyString;
 
         $this->buildPropertyTree();
+
+        return $this;
     }
 
-    public function buildLabelValue($object)
+    public function getLabelValue($object)
     {
+        $labelValue = $this->propertyString;
 
+        foreach ($this->propertyTreeList as $elem) {
+            /* @var $propertyTree PropertyTree */
+            $propertyTree = $elem['propertyTree'];
+            $tempObject = $object;
+            do {
+                if (!$tempObject || is_string($tempObject)) {
+                    break;
+                }
+
+                $tempObject = $tempObject->{'get'.ucwords($propertyTree->getPropertyName())}();
+            } while ($propertyTree = $propertyTree->getChildProperty());
+
+            $labelValue = str_replace($elem['matchedExpression'], $tempObject, $labelValue);
+        }
+
+        return $labelValue;
     }
-
-
 
 
     /**
-     * @return mixed
+     * @return PropertyTree[]
      */
-    public function getPropertyTree()
+    public function getPropertyTreeList()
     {
-        return $this->propertyTree;
+        return $this->propertyTreeList;
     }
 
     private function buildPropertyTree()
@@ -53,9 +71,37 @@ class PropertyParser {
         $matches = array();
         // in case there's a simple property
         if (preg_match('/^\w+$/', $this->propertyString, $matches)) {
-            $this->propertyTree[] = $this->propertyString;
-        } else if (false) {
+            $this->propertyTreeList[] = array(
+                'matchedExpression' => $matches[0],
+                'propertyTree' => new PropertyTree($this->propertyString)
+            );
 
+        } else if (preg_match_all('/(#\{([\w]+(?:\.\w+)*)\})/', $this->propertyString, $matches)) {
+            foreach ($matches[0] as $key => $expression) {
+                $propertyPath = $matches[2][$key];
+
+                $properties = explode('.', $propertyPath);
+
+                /* @var $propertyTree \Btanase\MultiSelectAutocompleteBundle\Util\PropertyTree */
+                $propertyTree = null;
+                $root = null;
+
+                foreach ($properties as $property) {
+                    if (!$propertyTree) {
+                        $propertyTree = new PropertyTree($property);
+                        $root = $propertyTree;
+                    } else {
+                        $child = new PropertyTree($property);
+                        $propertyTree->setChildProperty($child);
+                        $propertyTree = $child;
+                    }
+                }
+
+                $this->propertyTreeList[] = array(
+                    'matchedExpression' => $expression,
+                    'propertyTree' => $root
+                );
+            }
         } else {
             throw new \InvalidArgumentException();
         }

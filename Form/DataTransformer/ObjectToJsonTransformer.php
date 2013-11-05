@@ -49,7 +49,7 @@ class ObjectToJsonTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        $labelMethod = 'get'.ucwords($this->labelProperty);
+        $propertyParser = new PropertyParser($this->labelProperty);
 
         $data = array();
         if (!$value) {
@@ -58,7 +58,7 @@ class ObjectToJsonTransformer implements DataTransformerInterface
 
             $data[] = array(
                 'value' => $value->getId(),
-                'label' => $value->{$labelMethod}()
+                'label' => $propertyParser->getLabelValue($value),
             );
 
             return json_encode($data);

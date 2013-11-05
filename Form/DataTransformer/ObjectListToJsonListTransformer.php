@@ -2,6 +2,7 @@
 namespace Btanase\MultiSelectAutocompleteBundle\Form\DataTransformer;
 
 use Btanase\MultiSelectAutocompleteBundle\Persistence\Manager\ItemManagerInterface;
+use Btanase\MultiSelectAutocompleteBundle\Util\PropertyParser;
 use Doctrine\ORM\EntityManager;
 
 use Symfony\Component\Form\DataTransformerInterface;
@@ -52,7 +53,7 @@ class ObjectListToJsonListTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        $labelMethod = 'get'.ucwords($this->labelProperty);
+        $propertyParser = new PropertyParser($this->labelProperty);
 
         if (!$value) {
             return '';
@@ -60,9 +61,10 @@ class ObjectListToJsonListTransformer implements DataTransformerInterface
             $data = array();
 
             foreach ($value as $item) {
+
                 $data[] = array(
                     'value' => $item->getId(),
-                    'label' => $item->{$labelMethod}()
+                    'label' => $propertyParser->getLabelValue($item),
                 );
 
             }
