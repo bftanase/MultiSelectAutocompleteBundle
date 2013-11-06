@@ -9,28 +9,26 @@
 
     {% block bt_autocomplete_js %}
         <script type="text/javascript">
-            $(function() {
-                var cache = [];
-                var elementId = '#{{ id }}_tagit';
-                var inputId = '#{{ id }}';
-                $(elementId).tagit({
-                    singleFieldNode: $(inputId),
-                    tagLimit: {% if multiple %}null{% else %}1{% endif %},
-                    autocomplete: {
-                        source: function(request, response) {
-                            var term = request.term;
-                            if (term in cache) {
-                                response(cache[term]);
-                                return;
-                            }
-
-                            $.getJSON('{{ path(ajax_autocomplete_route_name) }}', request, function (data, status ,xhr) {
-                                cache[term] = data;
-                                response(data);
-                            });
+            var cache = [];
+            var elementId = '#{{ id }}_tagit';
+            var inputId = '#{{ id }}';
+            $(elementId).tagit({
+                singleFieldNode: $(inputId),
+                tagLimit: {% if multiple %}null{% else %}1{% endif %},
+                autocomplete: {
+                    source: function(request, response) {
+                        var term = request.term;
+                        if (term in cache) {
+                            response(cache[term]);
+                            return;
                         }
+
+                        $.getJSON('{{ path(ajax_autocomplete_route_name) }}', request, function (data, status ,xhr) {
+                            cache[term] = data;
+                            response(data);
+                        });
                     }
-                })
+                }
             })
         </script>
     {% endblock %}
